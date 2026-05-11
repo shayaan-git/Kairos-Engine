@@ -1,10 +1,10 @@
 import React from "react";
 import { ThreeDot } from "react-loading-indicators";
 const Loader = () => (
-  <div className="flex justify-center items-center min-h-screen">
+  <div className="flex justify-center items-center min-h-screen bg-black">
     <ThreeDot
       variant="bounce"
-      color="#ff9999"
+      color="#00D5FF"
       size="large"
       text=""
       textColor=""
