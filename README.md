@@ -3,28 +3,16 @@
 > A Perplexity AI–inspired research engine powered by real-time web search and AI summarization.
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-98.8%25-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?style=flat&logo=nodedotjs&logoColor=white)
+![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?logo=express&logoColor=fff&style=flat)
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=flat&logo=react&logoColor=black)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?style=flat&logo=nodedotjs&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-ffffff?logo=langchain&logoColor=green)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
 
 ---
 
-## 📖 Table of Contents
-
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Local Development Setup](#local-development-setup)
-  - [1. Clone the Repository](#1-clone-the-repository)
-  - [2. Backend Setup](#2-backend-setup)
-  - [3. Frontend Setup](#3-frontend-setup)
-- [Environment Variables](#environment-variables)
-- [Building for Production](#building-for-production)
-- [Deploying to Render](#deploying-to-render)
-  - [Deploy the Backend](#deploy-the-backend)
-  - [Deploy the Frontend](#deploy-the-frontend)
-  - [Localhost → Render URL Replacement](#localhost--render-url-replacement)
-- [Contributing](#contributing)
+### 📌 [Live Link 👈🏻](https://kairos-frontend-gro9.onrender.com)
 
 ---
 
