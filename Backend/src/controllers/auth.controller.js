@@ -111,7 +111,11 @@ export async function login(req, res) {
       { expiresIn: "7d" },
     );
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      samesite: "none",
+    });
 
     res.status(200).json({
       success: true,
