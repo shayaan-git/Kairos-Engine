@@ -1,4 +1,4 @@
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+// import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
 import {
   HumanMessage,
@@ -10,10 +10,10 @@ import * as z from "zod";
 import { searchInternet } from "./internet.services.js";
 import { createAgent } from "langchain";
 
-const geminiModel = new ChatGoogleGenerativeAI({
-  model: "mistral-small-latest",
-  apiKey: process.env.MISTRAL_API_KEY,
-});
+// const geminiModel = new ChatGoogleGenerativeAI({
+//   model: "gemini-3.1-flash-lite",
+//   apiKey: process.env.GEMINI_API_KEY,
+// });
 
 const mistralModel = new ChatMistralAI({
   model: "mistral-small-latest",
@@ -34,7 +34,7 @@ const searchInternetTool = tool(searchInternet, {
 });
 
 const agent = createAgent({
-  model: geminiModel,
+  model: mistralModel,
   tools: [searchInternetTool],
 });
 
