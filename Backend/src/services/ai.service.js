@@ -11,8 +11,8 @@ import { searchInternet } from "./internet.services.js";
 import { createAgent } from "langchain";
 
 const geminiModel = new ChatGoogleGenerativeAI({
-  model: "gemini-3.1-flash-lite",
-  apiKey: process.env.GEMINI_API_KEY,
+  model: "mistral-small-latest",
+  apiKey: process.env.MISTRAL_API_KEY,
 });
 
 const mistralModel = new ChatMistralAI({
