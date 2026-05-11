@@ -114,7 +114,7 @@ export async function login(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
-      samesite: "none",
+      sameSite: "none",
     });
 
     res.status(200).json({
@@ -180,7 +180,7 @@ export async function verifyEmail(req, res) {
     }
 
     user.verified = true;
-    await user.save();  // you have never saved the user after setting verified to true, so the change is not persisted in the database. You need to call user.save() to save the updated user document back to the database.
+    await user.save(); // you have never saved the user after setting verified to true, so the change is not persisted in the database. You need to call user.save() to save the updated user document back to the database.
 
     // res.send() automatically sets Content-Type: text/html when you pass it an HTML string.
     res.send(
