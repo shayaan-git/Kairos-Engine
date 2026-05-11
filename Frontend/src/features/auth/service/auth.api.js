@@ -5,6 +5,15 @@ const api = axios.create({
   withCredentials: true, // Include cookies in requests
 });
 
+// ✅ Har request mein token header mein bhejo
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export async function register({ email, username, password }) {
   const response = await api.post("/api/auth/register", {
     email,
@@ -19,6 +28,7 @@ export async function login({ email, password }) {
     email,
     password,
   });
+  localStorage.setItem("token", response.data.token);
   return response.data;
 }
 
