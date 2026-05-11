@@ -7,11 +7,13 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import { RiArrowUpLongLine } from "@remixicon/react";
 import remarkGfm from "remark-gfm";
+import { Icon } from "@iconify/react";
 
 const Dashboard = () => {
   const chat = useChat();
   const [ChatInput, setChatInput] = useState("");
-  const [userMessage, setUserMessage] = useState("");
+
+  const isLoading = useSelector((state) => state.chat.isLoading);
 
   const chats = useSelector((state) => state.chat.chats);
 
@@ -65,7 +67,10 @@ const Dashboard = () => {
 
           {/* New Chat Button */}
           <div className="p-4">
-            <button className="w-full bg-neutral-900 hover:bg-neutral-950 text-neutral-300 rounded-lg px-2 p-1 font-semibold flex items-center gap-2 transition text-left">
+            <button
+              onClick={chat.handleNewChat}
+              className="w-full bg-neutral-900 hover:bg-neutral-950 text-neutral-300 rounded-lg px-2 p-1 font-semibold flex items-center gap-2 transition text-left"
+            >
               <span className="text-xl">+</span> New Chat
             </button>
           </div>
@@ -105,10 +110,10 @@ const Dashboard = () => {
           {/* Settings and Help */}
           <div className="border-t border-neutral-800 p-4 space-y-2">
             <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm">
-              <span>👤</span> User
+              <span><Icon icon="et:profile-male" width="20" height="20" color="#00D5FF" /></span> User
             </button>
             <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm">
-              <span>⚙️</span> Settings
+              <span><Icon icon="si:sign-out-line" width="20" height="20" color="#00D5FF" /></span> Log out
             </button>
           </div>
         </aside>
@@ -121,8 +126,17 @@ const Dashboard = () => {
           {/* Chat Messages Area */}
           <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
             <div className="w-full max-w-3xl mx-auto px-6">
-              {chats &&
-                chats[currentChatId]?.messages?.map?.((msg, index) => (
+              {!currentChatId ? (
+                <div className="flex flex-col items-center justify-center h-full text-center mt-32">
+                  <h2 className="text-4xl font-semibold text-neutral-300 mb-2">
+                    What's on your mind?
+                  </h2>
+                  <p className="text-neutral-500 text-sm">
+                    Ask Kairos to begin a new chat
+                  </p>
+                </div>
+              ) : (
+                chats && chats[currentChatId]?.messages?.map?.((msg, index) => (
                   <div key={index} className="mb-8">
                     {msg.role === "user" ? (
                       // User Message
@@ -287,7 +301,19 @@ const Dashboard = () => {
                       </div>
                     )}
                   </div>
-                ))}
+                ))
+              )}
+
+              {/*Spinner*/}
+              {isLoading && (
+                <div className="mb-8 max-w-4xl">
+                  <Icon
+                    icon="svg-spinners:pulse-rings-2"
+                    width="28"
+                    color="#00D5FF"
+                  />
+                </div>
+              )}
             </div>
           </div>
 

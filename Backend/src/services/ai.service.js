@@ -11,7 +11,7 @@ import { searchInternet } from "./internet.services.js";
 import { createAgent } from "langchain";
 
 const geminiModel = new ChatGoogleGenerativeAI({
-  model: "gemini-2.5-flash-lite",
+  model: "gemini-flash-latest",
   apiKey: process.env.GEMINI_API_KEY,
 });
 
