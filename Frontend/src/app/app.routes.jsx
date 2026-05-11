@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "../features/auth/pages/Login.jsx";
 import Register from "../features/auth/pages/Register.jsx";
-import Dashboard from "../features/chat/pages/dashboard.jsx";
+import Dashboard from "../features/chat/pages/Dashboard.jsx";
 import Protected from "../features/auth/components/protected.jsx";
 
 export const router = createBrowserRouter([
