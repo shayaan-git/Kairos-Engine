@@ -46,7 +46,7 @@ export async function register(req, res) {
       subject: "Welcome to Kairos!",
       html: `Hi, ${username}!<p>Thank you for registering at <strong>Kairos</strong>. We're excited to have you on board.</p>
       <p>Please verify your email address by clicking the link below:</p>
-      <a href="http://localhost:3000/api/auth/verify-email?token=${emailVerificationToken}">Verify Email</a>
+      <a href="${process.env.CLIENT_URL}/api/auth/verify-email?token=${emailVerificationToken}">Verify Email</a>
       <p>If you did not create an account, please ignore this email.</p>
       <p>Best regards,<br/>The Kairos Team</p>`,
     });
@@ -180,7 +180,7 @@ export async function verifyEmail(req, res) {
 
     // res.send() automatically sets Content-Type: text/html when you pass it an HTML string.
     res.send(
-      "<h1>Email verified successfully!</h1><p>You can now log in to your account.</p><a href='http://localhost:3000/login'>Go to Login</a>",
+      "<h1>Email verified successfully!</h1><p>You can now log in to your account.</p><a href='${process.env.CLIENT_URL}/login'>Go to Login</a>",
     );
   } catch (error) {
     return res
