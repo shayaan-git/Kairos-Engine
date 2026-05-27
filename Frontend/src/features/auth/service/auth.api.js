@@ -37,3 +37,14 @@ export async function getMe() {
   return response.data;
 }
 
+export async function logout() {
+  try {
+    // Optional: Call backend logout endpoint if it exists
+    await api.post("/api/auth/logout");
+  } catch (error) {
+    // Endpoint might not exist, but we still clear client-side
+    console.warn("Backend logout failed:", error);
+  }
+  // Clear token from localStorage
+  localStorage.removeItem("token");
+}

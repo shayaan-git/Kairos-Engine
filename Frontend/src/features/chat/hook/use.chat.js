@@ -15,6 +15,7 @@ import {
   createNewChat,
   addNewMessage,
   addMessages,
+  deleteChat as deleteChatAction,
 } from "../chat.slice.js";
 
 import { useDispatch } from "react-redux";
@@ -120,11 +121,27 @@ export const useChat = () => {
     dispatch(setCurrentChatId(null));
   }
 
+  /**
+   * This function handles deleting a chat. It calls the delete API endpoint,
+   * then dispatches the Redux action to remove the chat from the state.
+   * If the deleted chat is currently open, currentChatId is reset to null.
+   */
+  async function handleDeleteChat(chatId) {
+    try {
+      await deleteChat({ chatId });
+      dispatch(deleteChatAction({ chatId }));
+    } catch (error) {
+      console.error("Failed to delete chat:", error);
+      dispatch(setError(error.message));
+    }
+  }
+
   return {
     initializeSocketConnection,
     handleSendMessage,
     handleGetChats,
     handleOpenChat,
     handleNewChat,
+    handleDeleteChat,
   };
 };

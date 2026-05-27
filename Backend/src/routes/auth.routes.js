@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   getMe,
   login,
+  logout,
   register,
   verifyEmail,
 } from "../controllers/auth.controller.js";
@@ -33,6 +34,8 @@ AuthRouter.post("/register", registerValidator(), register);
  */
 
 AuthRouter.post("/login", loginValidator(), login);
+
+AuthRouter.post("/logout", logout);
 
 /**
  * @route GET /api/auth/verify-email

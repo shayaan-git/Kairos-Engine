@@ -136,6 +136,12 @@ export async function login(req, res) {
   }
 }
 
+export async function logout(req, res) {
+  res.clearCookie("token");
+  // Optional: Invalidate token on server (e.g., add to blacklist)
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+}
+
 /**
  * @route GET /api/auth/get-me
  * @desc Get current authenticated user's info

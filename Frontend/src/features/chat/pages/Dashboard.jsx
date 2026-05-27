@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useChat } from "../hook/use.chat";
+import { useAuth } from "../../auth/hook/use.auth";
 import ReactMarkdown from "react-markdown";
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
@@ -11,6 +12,7 @@ import { Icon } from "@iconify/react";
 
 const Dashboard = () => {
   const chat = useChat();
+  const auth = useAuth();
   const [ChatInput, setChatInput] = useState("");
 
   const isLoading = useSelector((state) => state.chat.isLoading);
@@ -85,23 +87,40 @@ const Dashboard = () => {
                 (
                   chatItem, //object.values to convert chats object into an array for mapping
                 ) => (
-                  <button
-                    onClick={() => {
-                      openChat(chatItem.id);
-                    }}
+                  <div
                     key={chatItem.id}
-                    type="button"
-                    className="w-full px-3 py-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 cursor-pointer transition flex justify-start items-center gap-2 text-sm text-left"
+                    className="group w-full px-3 py-1 rounded-lg bg-neutral-900 hover:bg-neutral-800 cursor-pointer transition flex justify-start items-center gap-2 text-sm"
                   >
-                    <span className="truncate flex-1 min-w-0">
-                      <ReactMarkdown
-                        remarkPlugins={[remarkMath]}
-                        rehypePlugins={[rehypeKatex]}
-                      >
-                        {chatItem.title}
-                      </ReactMarkdown>
-                    </span>
-                  </button>
+                    <button
+                      onClick={() => {
+                        openChat(chatItem.id);
+                      }}
+                      type="button"
+                      className="w-full text-left flex justify-start items-center gap-2"
+                    >
+                      <span className="truncate flex-1 min-w-0">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkMath]}
+                          rehypePlugins={[rehypeKatex]}
+                        >
+                          {chatItem.title}
+                        </ReactMarkdown>
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => chat.handleDeleteChat(chatItem.id)}
+                      type="button"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 p-1 hover:bg-neutral-700 rounded flex items-center justify-center flex-shrink-0"
+                      title="Delete chat"
+                    >
+                      <Icon
+                        icon="streamline-freehand:delete-bin-2"
+                        width="16"
+                        height="16"
+                        color="#ff6b6b"
+                      />
+                    </button>
+                  </div>
                 ),
               )}
             </div>
@@ -110,10 +129,29 @@ const Dashboard = () => {
           {/* Settings and Help */}
           <div className="border-t border-neutral-800 p-4 space-y-2">
             <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm">
-              <span><Icon icon="et:profile-male" width="20" height="20" color="#00D5FF" /></span> User
+              <span>
+                <Icon
+                  icon="et:profile-male"
+                  width="20"
+                  height="20"
+                  color="#00D5FF"
+                />
+              </span>{" "}
+              User
             </button>
-            <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm">
-              <span><Icon icon="si:sign-out-line" width="20" height="20" color="#00D5FF" /></span> Log out
+            <button
+              onClick={auth.handleLogout}
+              className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm"
+            >
+              <span>
+                <Icon
+                  icon="si:sign-out-line"
+                  width="20"
+                  height="20"
+                  color="#00D5FF"
+                />
+              </span>{" "}
+              Log out
             </button>
           </div>
         </aside>
@@ -136,7 +174,8 @@ const Dashboard = () => {
                   </p>
                 </div>
               ) : (
-                chats && chats[currentChatId]?.messages?.map?.((msg, index) => (
+                chats &&
+                chats[currentChatId]?.messages?.map?.((msg, index) => (
                   <div key={index} className="mb-8">
                     {msg.role === "user" ? (
                       // User Message
