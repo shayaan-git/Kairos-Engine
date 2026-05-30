@@ -113,8 +113,9 @@ export async function login(req, res) {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, //matches 7d JWT expiry
     });
 
     res.status(200).json({
@@ -137,7 +138,11 @@ export async function login(req, res) {
 }
 
 export async function logout(req, res) {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  });
   // Optional: Invalidate token on server (e.g., add to blacklist)
   res.status(200).json({ success: true, message: "Logged out successfully" });
 }
@@ -191,7 +196,7 @@ export async function verifyEmail(req, res) {
 
     // res.send() automatically sets Content-Type: text/html when you pass it an HTML string.
     res.send(
-      "<h1>Email verified successfully!</h1><p>You can now log in to your account.</p><a href='${process.env.CLIENT_URL}/login'>Go to Login</a>",
+      `<h1>Email verified successfully!</h1><p>You can now log in to your account.</p><a href='${process.env.CLIENT_URL}/login'>Go to Login</a>`,
     );
   } catch (error) {
     return res

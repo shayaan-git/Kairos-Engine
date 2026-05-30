@@ -1,11 +1,10 @@
 import React from "react";
-import { ThreeDot } from "react-loading-indicators";
+import { Riple } from "react-loading-indicators";
 const Loader = () => (
-  <div className="flex justify-center items-center min-h-screen bg-black">
-    <ThreeDot
-      variant="bounce"
-      color="#00D5FF"
-      size="large"
+  <div className="flex justify-center items-center min-h-screen bg-stone-900">
+    <Riple
+      color="#d9d9d9"
+      size="small"
       text=""
       textColor=""
     />
