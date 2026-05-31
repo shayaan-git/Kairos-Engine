@@ -14,8 +14,15 @@ const Dashboard = () => {
   const chat = useChat();
   const auth = useAuth();
   const [ChatInput, setChatInput] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    open: false,
+    chatId: null,
+  });
 
   const isLoading = useSelector((state) => state.chat.isLoading);
+
+  const userInfo = useSelector((state) => state.auth.user);
 
   const chats = useSelector((state) => state.chat.chats);
 
@@ -40,6 +47,18 @@ const Dashboard = () => {
 
   const openChat = (chatId) => {
     chat.handleOpenChat(chatId, chats);
+    setSidebarOpen(false);
+  };
+
+  const handleDeleteClick = (chatId) => {
+    setDeleteConfirm({ open: true, chatId });
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteConfirm.chatId) {
+      chat.handleDeleteChat(deleteConfirm.chatId);
+      setDeleteConfirm({ open: false, chatId: null });
+    }
   };
 
   return (
@@ -47,21 +66,34 @@ const Dashboard = () => {
       <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
+          height: 7px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: rgba(115, 115, 115, 0.5);
-          border-radius: 3px;
+          border-radius: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: rgba(115, 115, 115, 0.8);
         }
       `}</style>
       <main className="h-screen w-full flex bg-neutral-900 text-neutral-400">
+        {/* Sidebar Overlay for Mobile */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 bg-neutral-900 border-r border-neutral-800 shadow-lg flex flex-col">
+        <aside
+          className={`fixed md:relative w-64 bg-neutral-900 border-r border-neutral-800 shadow-lg flex flex-col z-40 h-full transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
+        >
           {/* Logo */}
           <div className="p-6 border-transparent border-neutral-800">
             <h1 className="text-2xl font-bold text-neutral-300">Kairos</h1>
@@ -72,20 +104,21 @@ const Dashboard = () => {
             <button
               onClick={chat.handleNewChat}
               className="w-full bg-neutral-900 hover:bg-neutral-950 text-neutral-300 rounded-lg px-2 p-1 font-semibold flex items-center gap-2 transition text-left"
+              title="Start a new chat"
             >
               <span className="text-xl">+</span> New Chat
             </button>
           </div>
 
           {/* Recent History */}
-          <div className="flex-1 overflow-y-auto px-4 custom-scrollbar">
-            <h3 className="text-xs uppercase text-neutral-500 font-semibold mb-4 mt-4">
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
+            <h3 className="text-xs uppercase text-neutral-500 font-semibold px-2 mb-4 mt-4">
               Recent History
             </h3>
             <div className="space-y-2">
               {Object.values(chats || {}).map(
                 (
-                  chatItem, //object.values to convert chats object into an array for mapping
+                  chatItem, //object.values used to convert chats object into an array for mapping
                 ) => (
                   <div
                     key={chatItem.id}
@@ -108,7 +141,7 @@ const Dashboard = () => {
                       </span>
                     </button>
                     <button
-                      onClick={() => chat.handleDeleteChat(chatItem.id)}
+                      onClick={() => handleDeleteClick(chatItem.id)}
                       type="button"
                       className="opacity-0 group-hover:opacity-100 transition-opacity ml-1 p-1 hover:bg-neutral-700 rounded flex items-center justify-center flex-shrink-0"
                       title="Delete chat"
@@ -128,6 +161,7 @@ const Dashboard = () => {
 
           {/* Settings and Help */}
           <div className="border-t border-neutral-800 p-4 space-y-2">
+
             <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm">
               <span>
                 <Icon
@@ -136,12 +170,21 @@ const Dashboard = () => {
                   height="20"
                   color="#00D5FF"
                 />
-              </span>{" "}
-              User
+              </span>
+              <div className="flex flex-col min-w-0">
+                <span className="text-neutral-300 font-medium truncate">
+                  {userInfo.username || "User"}
+                </span>
+                <span className="text-neutral-500 text-xs truncate">
+                  {userInfo.email || ""}
+                </span>
+              </div>
             </button>
+
             <button
               onClick={auth.handleLogout}
               className="w-full text-left px-3 py-2 rounded-lg hover:bg-neutral-800 transition flex items-center gap-3 text-sm"
+              title="Logout of your account"
             >
               <span>
                 <Icon
@@ -159,7 +202,20 @@ const Dashboard = () => {
         {/* Main Content */}
         <div className="flex-1 flex flex-col bg-neutral-900">
           {/* Top Bar */}
-          <div className="border-transparent border-neutral-200 p-4 flex justify-between items-center shadow-[0_4px_12px_2px_rgba(24,24,27,0.8),0_1px_8px_0_rgba(39,39,42,0.06)]"></div>
+          <div className="border-transparent border-neutral-200 p-4 flex justify-between items-center shadow-[0_4px_12px_2px_rgba(24,24,27,0.8),0_1px_8px_0_rgba(39,39,42,0.06)]">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="md:hidden p-2 hover:bg-neutral-800 rounded-lg transition"
+              title="Toggle sidebar"
+            >
+              <Icon
+                icon={sidebarOpen ? "mdi:close" : "mdi:menu"}
+                width="24"
+                height="24"
+                color="#00D5FF"
+              />
+            </button>
+          </div>
 
           {/* Chat Messages Area */}
           <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
@@ -406,13 +462,43 @@ const Dashboard = () => {
               {/* Footer */}
               <div className="flex items-center justify-between text-xs text-neutral-500">
                 <span>
-                  Kairos may provide inaccurate information about markets or
-                  financial trends. Please verify critical data.
+                  Kairos delivers high-quality, fresh, and structured web
+                  context.
                 </span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        {deleteConfirm.open && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-neutral-800 rounded-lg p-6 max-w-sm mx-4 border border-neutral-700 shadow-lg">
+              <h2 className="text-lg font-semibold text-white mb-2">
+                Delete Chat
+              </h2>
+              <p className="text-neutral-300 mb-6">
+                Are you sure you want to delete this chat?
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() =>
+                    setDeleteConfirm({ open: false, chatId: null })
+                  }
+                  className="px-4 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-neutral-300 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
